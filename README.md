@@ -1,5 +1,9 @@
 # Luxembourg Immigration ChatBot 🤖🇱🇺
 
+<img width="1450" height="861" alt="image" src="https://github.com/user-attachments/assets/5fac0679-232e-47d4-b77a-f0b248dfecb9" />
+
+
+
 A Retrieval-Augmented Generation (RAG) powered chatbot designed to provide accurate and up-to-date information about Luxembourg immigration processes, visa applications, residence permits, and authorizations to stay.
 
 ## 📋 Table of Contents
