@@ -1,0 +1,13 @@
+streamlit==1.45.1
+python-dotenv==1.1.0
+llama-index-core==0.12.52.post1
+llama-index-llms-openai==0.4.7
+lama-index-embeddings-openai==0.5.1
+llama-index-agent-openai==0.4.12
+openai==1.108.0
+pypdf==6.0.0
+tiktoken==0.11.0
+
+
+
+

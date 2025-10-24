@@ -1,7 +1,10 @@
-
 import os
+import warnings
 import streamlit as st
 from dotenv import load_dotenv
+
+# Suppress deprecation warnings
+warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 from llama_index.llms.openai import OpenAI
 from llama_index.agent.openai import OpenAIAgent
@@ -62,13 +65,16 @@ def load_agent():
     # Summary index
     summary_index = SummaryIndex(nodes)
 
+    # Initialize LLM
+    llm = OpenAI(model=LLM_MODEL, temperature=0.1)
+
     # Query engines
     vector_qe = vector_index.as_query_engine(
-        llm=OpenAI(model=LLM_MODEL, streaming=True),
-        embedding_model=OpenAI(model=EMBEDDING_MODEL)
+        llm=llm,
+        similarity_top_k=3
     )
     summary_qe = summary_index.as_query_engine(
-        llm=OpenAI(model=LLM_MODEL, streaming=True)
+        llm=llm
     )
 
     # Tools
@@ -89,20 +95,23 @@ def load_agent():
         ),
     ]
 
-    # Agent
+    # System prompt
     system_prompt = (
-        """ You are Luxembourg-ImmigrationBot. Answer only questions about Next steps after getting admitted in Luxembourg Institutions, Authorizations to stay, Visas, Residence permit, luxembourg immigration and Ministry of Luxembourg. 
+        """You are Luxembourg-ImmigrationBot. Answer only questions about Next steps after getting admitted in Luxembourg Institutions, Authorizations to stay, Visas, Residence permit, luxembourg immigration and Ministry of Luxembourg. 
         Always understand the question, see what is actually asked try to give precise answer. If question requires just 1-2 line answer of specific information then give specific
         answer in 1-2 lines only, stick to the question and give relevant answer.
         use the provided tools for retrieval. If you are asked off-topic, politely decline.
         """
     )
+
+    # Using OpenAIAgent with warnings suppressed
     agent = OpenAIAgent.from_tools(
         tools,
-        llm=OpenAI(model=LLM_MODEL, streaming=True),
+        llm=llm,
         system_prompt=system_prompt,
         verbose=False
     )
+    
     return agent
 
 agent = load_agent()
