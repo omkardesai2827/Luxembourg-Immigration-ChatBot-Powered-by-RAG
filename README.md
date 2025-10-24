@@ -2,9 +2,80 @@
 
 <img width="1450" height="861" alt="image" src="https://github.com/user-attachments/assets/5fac0679-232e-47d4-b77a-f0b248dfecb9" />
 
-
-
 A Retrieval-Augmented Generation (RAG) powered chatbot designed to provide accurate and up-to-date information about Luxembourg immigration processes, visa applications, residence permits, and authorizations to stay.
+
+## 🎓 Quick Start with Docker (Recommended for Reproducibility)
+
+### Prerequisites
+- Docker installed ([Install Docker](https://docs.docker.com/get-docker/))
+- OpenAI API Key ([Get API Key](https://platform.openai.com/api-keys))
+
+### One-Command Setup
+```bash
+git clone https://github.com/yourusername/luxembourg-immigration-chatbot.git && \
+cd luxembourg-immigration-chatbot && \
+docker build -t luxembourg-chatbot . && \
+docker run -d --name luxembourg-chatbot -p 8501:8501 \
+  -e OPENAI_API_KEY=your_openai_api_key_here \
+  luxembourg-chatbot
+```
+
+**Then access:** http://localhost:8501
+
+### Step-by-Step Docker Setup
+
+**1. Clone the repository:**
+```bash
+git clone https://github.com/yourusername/luxembourg-immigration-chatbot.git
+cd luxembourg-immigration-chatbot
+```
+
+**2. Build the Docker image:**
+```bash
+docker build -t luxembourg-chatbot .
+```
+*This takes 2-5 minutes on first build*
+
+**3. Run the container:**
+```bash
+docker run -d \
+  --name luxembourg-chatbot \
+  -p 8501:8501 \
+  -e OPENAI_API_KEY=your_openai_api_key_here \
+  luxembourg-chatbot
+```
+*Replace `your_openai_api_key_here` with your actual OpenAI API key*
+
+**4. Access the application:**
+- Open your browser: http://localhost:8501
+- The chatbot interface will load automatically
+
+**5. Stop the container when done:**
+```bash
+docker stop luxembourg-chatbot
+docker rm luxembourg-chatbot
+```
+
+### Docker Commands Reference
+```bash
+# View running containers
+docker ps
+
+# View logs
+docker logs luxembourg-chatbot
+
+# Follow logs in real-time
+docker logs -f luxembourg-chatbot
+
+# Restart container
+docker restart luxembourg-chatbot
+
+# Remove container
+docker rm -f luxembourg-chatbot
+
+# Remove image
+docker rmi luxembourg-chatbot
+```
 
 ## 📋 Table of Contents
 
@@ -13,6 +84,8 @@ A Retrieval-Augmented Generation (RAG) powered chatbot designed to provide accur
 - [Architecture](#architecture)
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
+  - [Docker Setup (Recommended)](#quick-start-with-docker-recommended-for-reproducibility)
+  - [Local Setup](#local-installation-without-docker)
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
@@ -35,6 +108,7 @@ This chatbot leverages Retrieval-Augmented Generation (RAG) architecture to prov
   - Summary-based responses for high-level overviews
 - **Semantic Search**: Uses embedding-based similarity matching for relevant document retrieval
 - **Persistent Storage**: Efficient vector index caching for faster responses
+- **Docker Support**: Fully containerized for reproducible deployment across any system
 
 ## 🏗️ Architecture
 
@@ -63,64 +137,75 @@ The system uses an intelligent agent with two specialized tools:
 - **Vector Operations**: Cosine similarity for semantic search
 - **Document Processing**: PyPDF for PDF handling
 - **Environment Management**: python-dotenv
+- **Containerization**: Docker (Python 3.13.5)
 
 ## 📦 Installation
 
+### Docker Setup (Recommended)
+
+See [Quick Start with Docker](#quick-start-with-docker-recommended-for-reproducibility) section above.
+
+### Local Installation (Without Docker)
+
 1. **Clone the repository:**
-   ```bash
+```bash
    git clone https://github.com/yourusername/luxembourg-immigration-chatbot.git
    cd luxembourg-immigration-chatbot
-   ```
+```
 
 2. **Create a virtual environment:**
-   ```bash
+```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+```
 
 3. **Install required packages:**
-   ```bash
-   pip install streamlit openai llama-index python-dotenv
-   ```
-
-4. **Additional dependencies:**
-   ```bash
-   pip install llama-index-llms-openai llama-index-agent-openai llama-index-embeddings-openai
-   ```
+```bash
+   pip install -r requirements.txt
+```
 
 ## ⚙️ Configuration
 
 ### API Key Setup
 
-**Option 1: Using .env file (Recommended for local development)**
+**For Docker (Recommended):**
+- Pass API key directly when running container:
+```bash
+  docker run -e OPENAI_API_KEY=your_key ...
+```
+
+**For Local Development:**
+
+**Option 1: Using .env file**
 1. Create a `.env` file in the project root:
-   ```
+```
    OPENAI_API_KEY=your_openai_api_key_here
-   ```
+```
 
-**Option 2: Using Streamlit Secrets (For deployment)**
+**Option 2: Using Streamlit Secrets**
 1. Create `.streamlit/secrets.toml` file:
-   ```toml
+```toml
    OPENAI_API_KEY = "your_openai_api_key_here"
-   ```
-
-### Document Setup
-1. Create a directory for your PDF documents
-2. Update the `PDF_DIR` variable in `app.py` to point to your documents directory:
-   ```python
-   PDF_DIR = "path/to/your/pdf/documents"
-   ```
+```
 
 **⚠️ Important**: You must provide your own OpenAI API key. Get one from [OpenAI Platform](https://platform.openai.com/api-keys).
 
 ## 🚀 Usage
 
-### Running the Application
+### Using Docker (Recommended)
+```bash
+docker run -d --name luxembourg-chatbot -p 8501:8501 \
+  -e OPENAI_API_KEY=your_key luxembourg-chatbot
+```
+
+Access at: http://localhost:8501
+
+### Using Local Installation
 
 1. **Start the Streamlit server:**
-   ```bash
+```bash
    streamlit run app.py
-   ```
+```
 
 2. **Access the interface:**
    - Open your web browser and navigate to `http://localhost:8501`
@@ -138,27 +223,28 @@ The system uses an intelligent agent with two specialized tools:
 - "Can you give me an overview of the immigration process?"
 
 ## 📁 Project Structure
-
 ```
 luxembourg-immigration-chatbot/
 │
 ├── app.py                    # Main Streamlit application
-├── .env                      # Environment variables (create this)
 ├── requirements.txt          # Python dependencies
+├── Dockerfile               # Docker image configuration
+├── .dockerignore            # Docker build exclusions
+├── docker-compose.yml       # Docker Compose configuration (optional)
+├── .env.example             # Environment variables template
+├── .gitignore               # Git ignore rules
 ├── README.md                # Project documentation
+├── LICENSE                  # Project license
 │
-├── .streamlit/
-│   └── secrets.toml         # Streamlit secrets (for deployment)
+├── updated_pdfs_with_visa/  # PDF documents directory
+│   ├── document1.pdf
+│   ├── document2.pdf
+│   └── ...
 │
-├── vector_data/             # Generated vector index storage (auto-created)
-│   ├── docstore.json
-│   ├── index_store.json
-│   └── vector_store.json
-│
-└── updated_pdfs_with_visa/  # Your PDF documents directory
-    ├── document1.pdf
-    ├── document2.pdf
-    └── ...
+└── vector_data/             # Generated vector index (auto-created)
+    ├── docstore.json
+    ├── index_store.json
+    └── vector_store.json
 ```
 
 ## 🔍 How It Works
@@ -182,6 +268,13 @@ luxembourg-immigration-chatbot/
 - **Detailed Queries**: Vector-based search for specific, precise answers
 - **Summary Queries**: Summary index for high-level overviews
 
+### 5. First Run Behavior
+- On first run, the application automatically:
+  1. Reads all PDF documents from `updated_pdfs_with_visa/`
+  2. Generates embeddings for all content
+  3. Saves vector index to `vector_data/` directory
+  4. Subsequent runs load cached embeddings for faster startup
+
 ## 🎯 Advantages
 
 ### RAG vs Traditional Chatbots
@@ -197,6 +290,41 @@ luxembourg-immigration-chatbot/
 - 🔧 **Simple Maintenance**: No need for labeled training data
 - 📈 **Scalable**: Easy to extend to new domains
 
+### Docker Benefits
+- 🐳 **Reproducibility**: Works identically on any system
+- 🔒 **Isolation**: No conflicts with system packages
+- 📦 **Easy Deployment**: Single command to run
+- 🔄 **Version Control**: Dockerfile ensures consistent environment
+
+## 🐛 Troubleshooting
+
+### Docker Issues
+
+**Port already in use:**
+```bash
+# Use a different port
+docker run -d -p 8080:8501 -e OPENAI_API_KEY=your_key luxembourg-chatbot
+# Access at http://localhost:8080
+```
+
+**Container won't start:**
+```bash
+# Check logs for errors
+docker logs luxembourg-chatbot
+```
+
+**Build fails:**
+```bash
+# Try building without cache
+docker build --no-cache -t luxembourg-chatbot .
+```
+
+**API key not working:**
+```bash
+# Ensure you're passing it correctly
+docker run -e OPENAI_API_KEY=sk-your-actual-key ...
+```
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -208,3 +336,26 @@ luxembourg-immigration-chatbot/
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 📞 Support
+
+For issues or questions:
+- Open an issue on GitHub
+- Contact: your-email@example.com
+
+## 👥 Authors
+
+- Omkar Sanjay Desai - [GitHub](https://github.com/yourusername)
+
+## 🙏 Acknowledgments
+
+- Built with [LlamaIndex](https://www.llamaindex.ai/)
+- Powered by [OpenAI GPT-4o-mini](https://openai.com/)
+- UI with [Streamlit](https://streamlit.io/)
+- Containerized with [Docker](https://www.docker.com/)
+
+---
+
+**Last Updated**: October 2025
