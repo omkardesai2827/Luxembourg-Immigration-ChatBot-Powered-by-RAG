@@ -1,0 +1,68 @@
+/Users/omkar/Luxembourg-Immigration-ChatBot-Powered-by-RAG/.dockerignore
+```
+
+**File content:**
+```
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Environment files
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Docker files
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Documentation
+README.md
+LICENSE
+
+# Logs
+*.log
+logs/
+
+# Streamlit secrets
+.streamlit/
+
+# Vector data (will be generated in container)
+vector_data/
+
+# Testing
+tests/
+*.test.py
+.pytest_cache/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
