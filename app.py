@@ -19,14 +19,16 @@ load_dotenv()
 # Streamlit page config
 st.set_page_config(page_title="Luxembourg Immigration Chatbot", layout="wide")
 
-# API key setup: try secrets.toml first, then .env
-try:
-    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-except Exception:
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# API key setup: try environment variable first, then secrets, then .env
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    try:
+        OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+    except Exception:
+        pass
 
 if not OPENAI_API_KEY:
-    st.error("OpenAI API key not found. Please add it to Streamlit secrets or your .env file.")
+    st.error("⚠️ OpenAI API key not found. Please set OPENAI_API_KEY environment variable.")
     st.stop()
 
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
@@ -35,8 +37,10 @@ os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 EMBEDDING_MODEL = "text-embedding-3-small"
 LLM_MODEL       = "gpt-4o-mini"
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "vector_data")
-PDF_DIR  = "/Users/omkar/Documents/Projects/2nd semester/Immigration_chatbot_RAG/updated_pdfs_with_visa"
+# Flexible paths for Docker and local development
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "vector_data")
+PDF_DIR = os.path.join(BASE_DIR, "updated_pdfs_with_visa")
 
 # Title
 st.title("Luxembourg Immigration Chatbot 🤖🇱🇺")
@@ -54,11 +58,13 @@ def load_agent():
     parser = SentenceSplitter()
     nodes = parser.get_nodes_from_documents(documents)
 
-    # Build or load vector index
-    if not os.path.exists(DATA_DIR):
+    docstore_path = os.path.join(DATA_DIR, "docstore.json")
+    if not os.path.exists(docstore_path):  # ← Checks if FILE exists
+        # FILE doesn't exist → CREATE embeddings
         vector_index = VectorStoreIndex(nodes)
         vector_index.storage_context.persist(persist_dir=DATA_DIR)
     else:
+        #FILE exists → LOAD embeddings
         storage_context = StorageContext.from_defaults(persist_dir=DATA_DIR)
         vector_index = load_index_from_storage(storage_context)
 
