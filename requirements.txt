@@ -1,9 +1,9 @@
 streamlit==1.45.1
 python-dotenv==1.1.0
-llama-index-core==0.13.0
-llama-index-llms-openai==0.4.7
-llama-index-embeddings-openai==0.5.1
-llama-index-agent-openai==0.4.12
+llama-index-core
+llama-index-llms-openai
+llama-index-embeddings-openai
+llama-index-agent-openai
 openai==1.108.0
 pypdf==6.0.0
 tiktoken==0.11.0
