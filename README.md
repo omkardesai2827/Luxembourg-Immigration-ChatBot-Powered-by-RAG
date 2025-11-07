@@ -268,12 +268,16 @@ luxembourg-immigration-chatbot/
 - **Detailed Queries**: Vector-based search for specific, precise answers
 - **Summary Queries**: Summary index for high-level overviews
 
-### 5. First Run Behavior
-- On first run, the application automatically:
-  1. Reads all PDF documents from `updated_pdfs_with_visa/`
-  2. Generates embeddings for all content
-  3. Saves vector index to `vector_data/` directory
-  4. Subsequent runs load cached embeddings for faster startup
+### 5. Pre-Generated Embeddings (Optimized Startup)
+- **Vector embeddings are pre-generated and included in the Docker image**
+- Benefits:
+  - ⚡ **Fast startup**: 5-10 seconds (vs 1-2 minutes if generating on first run)
+  - 💰 **Cost-effective**: No API calls for embeddings during startup
+  - ✅ **Consistent**: Everyone gets identical embeddings
+  - 🚀 **Production-ready**: Immediate availability after container starts
+- The `vector_data/` directory contains pre-computed embeddings from all PDFs
+- **API key is only used for**: Generating chat responses (not for embeddings)
+- **To update embeddings**: Regenerate locally and rebuild Docker image when PDFs change
 
 ## 🎯 Advantages
 
