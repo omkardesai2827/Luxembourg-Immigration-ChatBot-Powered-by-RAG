@@ -1,5 +1,7 @@
 import os
 import warnings
+warnings.filterwarnings('ignore')
+import warnings
 import streamlit as st
 from dotenv import load_dotenv
 

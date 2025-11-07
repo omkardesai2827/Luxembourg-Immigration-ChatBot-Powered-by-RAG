@@ -22,7 +22,7 @@ ENV/
 .env.local
 
 # Vector data (generated at runtime)
-vector_data/
+#vector_data/
 
 # macOS
 .DS_Store
