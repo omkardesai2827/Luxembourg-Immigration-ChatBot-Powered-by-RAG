@@ -12,8 +12,8 @@ A Retrieval-Augmented Generation (RAG) powered chatbot designed to provide accur
 
 ### One-Command Setup
 ```bash
-git clone https://github.com/yourusername/luxembourg-immigration-chatbot.git && \
-cd luxembourg-immigration-chatbot && \
+git clone Luxembourg-Immigration-ChatBot-Powered-by-RAG && \
+cd Luxembourg-Immigration-ChatBot-Powered-by-RAG && \
 docker build -t luxembourg-chatbot . && \
 docker run -d --name luxembourg-chatbot -p 8501:8501 \
   -e OPENAI_API_KEY=your_openai_api_key_here \
@@ -26,8 +26,8 @@ docker run -d --name luxembourg-chatbot -p 8501:8501 \
 
 **1. Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/luxembourg-immigration-chatbot.git
-cd luxembourg-immigration-chatbot
+git@github.com:omkardesai2827/Luxembourg-Immigration-ChatBot-Powered-by-RAG.git
+cd Luxembourg-Immigration-ChatBot-Powered-by-RAG
 ```
 
 **2. Build the Docker image:**
