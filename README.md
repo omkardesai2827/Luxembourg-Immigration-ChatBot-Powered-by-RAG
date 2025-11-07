@@ -37,6 +37,7 @@ docker build -t luxembourg-chatbot .
 *This takes 2-5 minutes on first build*
 
 **3. Run the container:**
+
 **for macbook terminal**
 ```bash
 docker run -d \
