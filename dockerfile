@@ -28,8 +28,8 @@ COPY app.py .
 # Copy PDF directory
 COPY updated_pdfs_with_visa/ ./updated_pdfs_with_visa/
 
-# Create directory for vector data (will be generated at runtime)
-RUN mkdir -p vector_data
+# Copy pre-generated vector embeddings
+COPY vector_data/ ./vector_data/
 
 # Expose Streamlit default port
 EXPOSE 8501
