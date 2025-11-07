@@ -1,7 +1,5 @@
 import os
 import warnings
-warnings.filterwarnings('ignore')
-import warnings
 import streamlit as st
 from dotenv import load_dotenv
 
@@ -10,9 +8,8 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 from llama_index.llms.openai import OpenAI
 from llama_index.agent.openai import OpenAIAgent
-from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
-from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, SummaryIndex
+from llama_index.core import VectorStoreIndex, SummaryIndex
 from llama_index.core import load_index_from_storage, StorageContext
 
 # Load environment variables from .env
@@ -36,13 +33,11 @@ if not OPENAI_API_KEY:
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
 # Constants
-EMBEDDING_MODEL = "text-embedding-3-small"
-LLM_MODEL       = "gpt-4o-mini"
+LLM_MODEL = "gpt-4o-mini"
 
 # Flexible paths for Docker and local development
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "vector_data")
-PDF_DIR = os.path.join(BASE_DIR, "updated_pdfs_with_visa")
 
 # Title
 st.title("Luxembourg Immigration Chatbot 🤖🇱🇺")
@@ -54,24 +49,14 @@ if "messages" not in st.session_state:
 # Load and prepare agent (cached)
 @st.cache_resource
 def load_agent():
-    # Load documents
-    documents = SimpleDirectoryReader(input_dir=PDF_DIR).load_data()
-    # Parse into nodes
-    parser = SentenceSplitter()
-    nodes = parser.get_nodes_from_documents(documents)
+    # Load pre-generated vector index
+    storage_context = StorageContext.from_defaults(persist_dir=DATA_DIR)
+    vector_index = load_index_from_storage(storage_context)
 
-    docstore_path = os.path.join(DATA_DIR, "docstore.json")
-    if not os.path.exists(docstore_path):  # ← Checks if FILE exists
-        # FILE doesn't exist → CREATE embeddings
-        vector_index = VectorStoreIndex(nodes)
-        vector_index.storage_context.persist(persist_dir=DATA_DIR)
-    else:
-        #FILE exists → LOAD embeddings
-        storage_context = StorageContext.from_defaults(persist_dir=DATA_DIR)
-        vector_index = load_index_from_storage(storage_context)
-
-    # Summary index
-    summary_index = SummaryIndex(nodes)
+    # Create summary index from the same storage
+    summary_index = SummaryIndex.from_documents(
+        vector_index.docstore.docs.values()
+    )
 
     # Initialize LLM
     llm = OpenAI(model=LLM_MODEL, temperature=0.1)
