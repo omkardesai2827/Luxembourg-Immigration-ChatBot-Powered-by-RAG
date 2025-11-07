@@ -37,6 +37,7 @@ docker build -t luxembourg-chatbot .
 *This takes 2-5 minutes on first build*
 
 **3. Run the container:**
+**for macbook terminal**
 ```bash
 docker run -d \
   --name luxembourg-chatbot \
@@ -44,6 +45,12 @@ docker run -d \
   -e OPENAI_API_KEY=your_openai_api_key_here \
   luxembourg-chatbot
 ```
+
+**for windows**
+```bash
+docker run -d --name luxembourg-chatbot -p 8501:8501 -e OPENAI_API_KEY="your_api_key_here" luxembourg-chatbot
+```
+
 *Replace `your_openai_api_key_here` with your actual OpenAI API key*
 
 **4. Access the application:**
