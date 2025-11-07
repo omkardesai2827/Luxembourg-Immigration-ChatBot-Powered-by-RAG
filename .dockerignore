@@ -54,7 +54,7 @@ logs/
 .streamlit/
 
 # Vector data (will be generated in container)
-vector_data/
+#vector_data/
 
 # Testing
 tests/
