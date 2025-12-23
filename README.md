@@ -359,7 +359,7 @@ For issues or questions:
 
 ## 👥 Authors
 
-- Omkar Sanjay Desai - [GitHub](https://github.com/yourusername)
+- Omkar Sanjay Desai - [GitHub]([https://github.com/yourusername](https://github.com/omkardesai2827))
 
 ## 🙏 Acknowledgments
 
